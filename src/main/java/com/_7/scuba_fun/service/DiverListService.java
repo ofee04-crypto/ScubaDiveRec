@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 潛水員列表服務層
+ */
 @Service
 public class DiverListService {
 

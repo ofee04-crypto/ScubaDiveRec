@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+ * http://localhost:8080/api/records
+ * http://localhost:8080/api/records/{id}
+ */
 @RestController
 @RequestMapping("/api/records")
 public class DivingRecordController {

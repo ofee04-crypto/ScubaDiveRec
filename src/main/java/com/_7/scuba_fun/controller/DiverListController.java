@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+ *http://localhost:8080/api/divers
+ * http://localhost:8080/api/divers/{id}
+ */
 @RestController
 @RequestMapping("/api/divers")
 public class DiverListController {
