@@ -52,16 +52,14 @@ node_modules/
 **/yarn-error.log*
 **/coverage/
 **/.eslintcache
-**/.env.local
-**/.env.*.local
 # =====================================
 # 4. 後端暫存與敏感配置 (Backend - Spring Boot)
 # =====================================
 HELP.md
 **/HELP.md
 .mvn/wrapper/maven-wrapper.jar
-**/application.yaml
-
+**/application.yml
+**/.env
 # 忽略根目錄可能產生的特定副檔名，但必須排除 Maven 設定檔
 *.pdf
 *.txt
