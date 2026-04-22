@@ -36,7 +36,7 @@ Thumbs.db
 **/.apt_generated
 **/.springBeans
 **/.sts4-cache
-# VS Code (修復邏輯衝突：使用 /* 忽略內部檔案，以便例外規則能順利進入目錄掃描)
+# VS Code 
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
@@ -60,16 +60,8 @@ node_modules/
 HELP.md
 **/HELP.md
 .mvn/wrapper/maven-wrapper.jar
-**/application-local.yml
-# Coze SDK 本地託管 (需手動下載)
-backend/src/main/resources/static/vendor/coze/index.js
-# =====================================
-# 5. AI 開發專用與特殊保留區 (AI & Exceptions)
-# =====================================
-!**/.gitkeep
-# 忽略整個 AI 輸出目錄
-AI_good/
-.agent/
+**/application.yaml
+
 # 忽略根目錄可能產生的特定副檔名，但必須排除 Maven 設定檔
 *.pdf
 *.txt
@@ -78,5 +70,3 @@ AI_good/
 !pom.xml
 !backend/pom.xml
 !**/pom.xml
-# 確保忽略 repomix 快取
-repomix-output.*
