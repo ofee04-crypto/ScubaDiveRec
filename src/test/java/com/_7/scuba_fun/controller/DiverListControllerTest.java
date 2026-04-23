@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,29 +17,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * 這是針對 DiverListController 的「單元測試 (Unit Test)」。
- * 單元測試的核心精神是「隔離」：我們只專注測試 Controller 負責的「HTTP 路由、參數接收、狀態碼回傳」是否正確，
- * 而不去真實連接資料庫。因此我們會用 Mock (假造) 的方式來取代真實的 Service 與資料庫。
- */
-// @WebMvcTest 是一個輕量級的測試註解。它不會啟動整個 Spring Boot 應用程式，
-// 而只會載入 Controller 層與 Web 相關的元件 (如過濾器、攔截器)，藉此大幅提升測試速度。
+// 測試註解。不啟動整個 Spring Boot，只載入 Controller 層與 Web 相關的元件，提升測試速度。
 @WebMvcTest(DiverListController.class)
 public class DiverListControllerTest {
 
-    // MockMvc 是 Spring 提供的強大工具，讓我們可以在不啟動真實 Tomcat 伺服器的情況下，
-    // 以程式碼的方式「模擬」發送 HTTP 請求 (GET, POST 等) 給 Controller。
+    // 模擬發送 HTTP 請求(GET, POST 等)給 Controller。
     @Autowired
     private MockMvc mockMvc;
-
-    // @MockBean 是 Mockito 結合 Spring 的功能。
-    // 它會創造一個「假的」 DiverListService 並放入 Spring 容器中，取代原本會連真實資料庫的 Service。
-    // 這樣 Controller 呼叫 Service 時，就不會真的去查資料庫，而是回傳我們等一下自訂的假資料。
-    @MockBean
+    // 創造假的 DiverListService，取代原本連真實資料庫的 Service。呼叫 Service時，不查資料庫而是回傳自訂的假資料。
+    @MockitoBean
     private DiverListService diverListService;
-
-    // ObjectMapper 是 Jackson 套件的核心類別，用來將 Java 物件 (Object) 轉換為 JSON 字串，
-    // 或者將 JSON 字串轉換為 Java 物件。在發送 POST 請求時非常需要它來包裝資料。
+    // 準備 ObjectMapper 實例，測試中將 Java 物件轉為 JSON 字串
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -78,13 +66,11 @@ public class DiverListControllerTest {
      */
     @Test
     public void testCreateDiver() throws Exception {
-        // ==========================================
-        // 1. Arrange (準備階段)
-        // ==========================================
+        // 1. Arrange (準備)
         // 準備要傳給 API 的 JSON 請求內容 (此時還沒有 ID)
         DiverList inputDiver = new DiverList();
         inputDiver.setAccount("new_diver");
-        
+
         // 準備假造的 Service 回傳結果 (模擬資料庫儲存後，產生了 ID 為 2 的結果)
         DiverList savedDiver = new DiverList();
         savedDiver.setDiverId(2);
@@ -93,16 +79,14 @@ public class DiverListControllerTest {
         // 當 Service 準備儲存「任何 (any)」 DiverList 物件時，強制回傳帶有 ID 的 savedDiver
         when(diverListService.createDiver(any(DiverList.class))).thenReturn(savedDiver);
 
-        // ==========================================
-        // 2. Act & Assert (執行與驗證階段)
-        // ==========================================
-        // 模擬發送一個 POST 請求到 "/api/divers"
+        // 2. Act & Assert (執行與驗證)
+        // 模擬 POST 請求到 "/api/divers"
         mockMvc.perform(post("/api/divers")
-                // 宣告我們傳過去的內容是 JSON 格式
+                // 宣告傳過去的內容是 JSON 格式
                 .contentType(MediaType.APPLICATION_JSON)
                 // 用 ObjectMapper 將 inputDiver 物件轉成實體的 JSON 字串塞進 Request Body
                 .content(objectMapper.writeValueAsString(inputDiver)))
-                
+
                 // 驗證 1：預期 HTTP 回傳狀態碼必須是 201 (Created，代表新增成功)
                 .andExpect(status().isCreated())
                 // 驗證 2：預期回傳的 JSON 根節點 "$" 中的 diverId 必須是 2
