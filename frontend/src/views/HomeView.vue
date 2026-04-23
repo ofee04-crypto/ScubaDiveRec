@@ -10,10 +10,10 @@ const formData = ref({
   weather: '',
   location: '',
   gasType: '',
-  startGasBar: '0.0',
-  endGasBar: '0.0',
-  maxDeepthMeter: '0.0',
-  visibilityMeter: '0.0',
+  startGasBar: '',
+  endGasBar: '',
+  maxDeepthMeter: '',
+  visibilityMeter: '',
   creatureFound: '',
   experienceDescribe: ''
 })

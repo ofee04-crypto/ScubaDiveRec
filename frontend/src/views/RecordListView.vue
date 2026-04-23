@@ -131,7 +131,7 @@ const deleteRecord = async (id) => {
   <div class="records-view fade-in">
     <header class="page-header">
       <h1>潛水紀錄總覽</h1>
-      <p>Your previous underwater adventures. (顯示第 {{ currentPage }} 頁，共 {{ totalPages }} 頁)</p>
+      <p>顯示第 {{ currentPage }} 頁，共 {{ totalPages }} 頁</p>
     </header>
 
     <div v-if="isLoading" class="loading">載入中...</div>
@@ -149,20 +149,27 @@ const deleteRecord = async (id) => {
           @click="showDetails(r)"
         >
           <div class="card-header">
-            <span class="badge">{{ r.divingType }}</span>
-            <h3 class="location-title">{{ r.location || '未命名' }}</h3>
+            <span class="badge">{{ r.divingType }} : {{ r.location || '未知地' }}</span>
+            <h3 class="date-small">{{ formatDate(r.startDatetime).split(' ')[0] }}</h3>
           </div>
           <div class="card-footer">
-            <span class="date-small">{{ formatDate(r.startDatetime).split(' ')[0] }}</span>
+            
           </div>
           <div class="card-body">
             <div class="stat-mini">
-              <span class="label">潛水員</span>
-              <span class="value">{{ r.account || '?' }}</span>
+              <span class="label">潛水員: {{ r.account || '?' }}</span>
             </div>
+            
             <div class="stat-mini">
-              <span class="label">深度</span>
-              <span class="value">{{ r.maxDeepthMeter }}m</span>
+              <span class="label">天氣: {{ r.weather || '?' }}</span>
+            </div>
+
+            <div class="stat-mini">
+              <span class="label">深度: {{ r.maxDeepthMeter || '?'}} m</span>
+            </div>
+
+            <div class="stat-mini">
+              <span class="label">生物: {{ r.creatureFound || '-'}}</span>
             </div>
           </div>
         </div>
@@ -330,17 +337,9 @@ const deleteRecord = async (id) => {
 
 .record-grid {
   display: grid;
-  /* 關鍵佈局：最少 2 欄，最多 5 欄，卡片寬度在 150px 到 1fr 之間切換 */
+  /* 最多 5 欄，卡片寬度在 150px 到 1fr 之間切換 */
   grid-template-columns: repeat(auto-fill, minmax(max(150px, (100% - 9 * 15px) / 5), 1fr));
   gap: 15px;
-}
-
-/* 確保小螢幕至少顯示 2 欄 */
-@media (max-width: 400px) {
-  .record-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
 }
 
 .record-card {
@@ -369,12 +368,12 @@ const deleteRecord = async (id) => {
 
 .stat-mini .label {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .date-small {
-  font-size: 0.9rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: white;
 }
 
 .pagination-container {
@@ -391,7 +390,6 @@ const deleteRecord = async (id) => {
   color: var(--accent-cyan);
 }
 
-/* Modal & Other Styles (保持不變，略有精簡以適應卡片變小) */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
