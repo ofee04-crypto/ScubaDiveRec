@@ -4,11 +4,18 @@ import { ref, onMounted } from 'vue'
 const divers = ref([])
 const formData = ref({
   diverId: '',
-  divingType: '岸潛',
+  divingType: '',
+  startDatetime: '',
+  endDatetime: '',
+  weather: '',
   location: '',
-  depth: '',
-  visibility: '',
-  comment: ''
+  gasType: '',
+  startGasBar: '0.0',
+  endGasBar: '0.0',
+  maxDeepthMeter: '0.0',
+  visibilityMeter: '0.0',
+  creatureFound: '',
+  experienceDescribe: ''
 })
 const message = ref('')
 const isLoading = ref(false)
@@ -38,9 +45,14 @@ const submitRecord = async () => {
       message.value = '✅ 紀錄新增成功！'
       // 重置表單 (保留 diverId 方便連續填寫)
       formData.value.location = ''
-      formData.value.depth = ''
-      formData.value.visibility = ''
-      formData.value.comment = ''
+      formData.value.startDatetime = ''
+      formData.value.endDatetime = ''
+      formData.value.startGasBar = ''
+      formData.value.endGasBar = ''
+      formData.value.maxDeepthMeter = ''
+      formData.value.visibilityMeter = ''
+      formData.value.creatureFound = ''
+      formData.value.experienceDescribe = ''
     } else {
       message.value = '❌ 新增失敗，請重試'
     }
@@ -62,44 +74,101 @@ const submitRecord = async () => {
     <div class="form-container glass-panel">
       <form @submit.prevent="submitRecord" class="dive-form">
         
-        <div class="form-group">
-          <label>潛水員</label>
-          <select v-model="formData.diverId" required>
-            <option value="" disabled>請選擇潛水員</option>
-            <option v-for="d in divers" :key="d.diverId" :value="d.diverId">
-              {{ d.account }} (ID: {{ d.diverId }})
-            </option>
-          </select>
-        </div>
-
+        <!-- Row 1: Diver & Type -->
         <div class="form-row">
           <div class="form-group">
-            <label>潛水類型</label>
-            <select v-model="formData.divingType" required>
-              <option value="岸潛">岸潛 (Shore Dive)</option>
-              <option value="船潛">船潛 (Boat Dive)</option>
+            <label>*潛水員</label>
+            <select v-model="formData.diverId" required>
+              <option value="" disabled>請選擇</option>
+              <option v-for="d in divers" :key="d.diverId" :value="d.diverId">
+               {{ d.account }} <!--  (ID: {{ d.diverId }}) -->
+              </option>
             </select>
           </div>
           <div class="form-group">
-            <label>潛點位置</label>
-            <input type="text" v-model="formData.location" placeholder="例如: 綠島 石朗" required>
+            <label>*潛水類型</label>
+            <select v-model="formData.divingType" required>
+              <option value="" disabled>請選擇</option>
+              <option value="岸潛">岸潛 (Shore Dive)</option>
+              <option value="船潛">船潛 (Boat Dive)</option>
+              <option value="放流">放流 (Drift Dive)</option>
+              <option value="自潛">自潛 (Free Dive)</option>
+            </select>
           </div>
         </div>
 
+        <!-- Row 2: DateTime -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>入水時間 (Start)</label>
+            <input type="datetime-local" v-model="formData.startDatetime">
+          </div>
+          <div class="form-group">
+            <label>出水時間 (End)</label>
+            <input type="datetime-local" v-model="formData.endDatetime">
+          </div>
+        </div>
+
+        <!-- Row 3: Location & Weather -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>*潛點位置</label>
+            <input type="text" v-model="formData.location" placeholder="例如: 綠島 石朗" required>
+          </div>
+          <div class="form-group">
+            <label>天氣情況</label>
+            <select v-model="formData.weather">
+              <option value="" disabled>請選擇</option>
+              <option value="晴天">晴天 (Sunny)</option>
+              <option value="多雲">多雲 (Cloudy)</option>
+              <option value="陰天">陰天 (Overcast)</option>
+              <option value="雨天">雨天 (Rainy)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 4: Gas & Pressure -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>*氣體類型</label>
+            <select v-model="formData.gasType" required>
+              <option value="" disabled>請選擇</option>
+              <option value="空氣 (Air)">空氣 (Air)</option>
+              <option value="高氧 (Nitrox)">高氧 (Nitrox)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>起始氣壓 (Bar)</label>
+            <input type="number" v-model="formData.startGasBar" placeholder="例如: 200">
+          </div>
+          <div class="form-group">
+            <label>結束氣壓 (Bar)</label>
+            <input type="number" v-model="formData.endGasBar" placeholder="例如: 50">
+          </div>
+        </div>
+
+        <!-- Row 5: Depth & Visibility -->
         <div class="form-row">
           <div class="form-group">
             <label>最大深度 (米)</label>
-            <input type="number" v-model="formData.depth" step="0.1" placeholder="例如: 18.5">
+            <input type="number" v-model="formData.maxDeepthMeter" step="0.1" placeholder="例如: 18.5">
           </div>
           <div class="form-group">
             <label>能見度 (米)</label>
-            <input type="number" v-model="formData.visibility" placeholder="例如: 15">
+            <input type="number" v-model="formData.visibilityMeter" placeholder="例如: 15">
           </div>
         </div>
 
+        <!-- Row 6: Creatures -->
+        <div class="form-group">
+          <label>遇見的海洋生物</label>
+          <input type="text" v-model="formData.creatureFound" placeholder="例如: 海龜, 小丑魚, 海蛞蝓">
+        </div>
+
+        <!-- Row 7: Comment -->
         <div class="form-group">
           <label>潛水心得與註記</label>
-          <textarea v-model="formData.comment" placeholder="看到了海龜與小丑魚..."></textarea>
+          <textarea v-model="formData.experienceDescribe" placeholder="看到了..."></textarea>
         </div>
 
         <div class="form-actions">

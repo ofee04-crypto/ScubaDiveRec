@@ -78,6 +78,12 @@ input, select {
   transition: border-color 0.3s ease;
 }
 
+/* 針對下拉選單的選項設定深色底，避免與白色文字融合 */
+option {
+  background-color: var(--bg-dark);
+  color: white;
+}
+
 input:focus, select:focus {
   border-color: var(--accent-cyan);
 }

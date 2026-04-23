@@ -18,6 +18,7 @@ public class DivingRecord {
     private BigDecimal endGasBar;
     private BigDecimal maxDeepthMeter;
     private BigDecimal visibilityMeter;
+    private String account;
     private String creatureFound;
     private String experienceDescribe;
 }

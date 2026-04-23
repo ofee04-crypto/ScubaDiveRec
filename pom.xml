@@ -51,6 +51,13 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- Spring Boot 熱部署套件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- Spring Boot 測試套件 (含 Mockito, Jackson, AutoConfigure) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

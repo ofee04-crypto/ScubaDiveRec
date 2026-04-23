@@ -4,8 +4,8 @@ import { ref, onMounted } from 'vue'
 const divers = ref([])
 const formData = ref({
   account: '',
-  pwd: '',
-  experience: '初階',
+  password: '',
+  expYear: '初階',
   age: ''
 })
 const message = ref('')
@@ -37,7 +37,7 @@ const submitDiver = async () => {
     })
     if (res.status === 201) {
       message.value = '✅ 潛水員新增成功！'
-      formData.value = { account: '', pwd: '', experience: '初階', age: '' }
+      formData.value = { account: '', password: '', expYear: '初階', age: '' }
       loadDivers() // 重新載入列表
     } else {
       message.value = '❌ 新增失敗'
@@ -78,18 +78,18 @@ const deleteDiver = async (id) => {
           </div>
           <div class="form-group">
             <label>密碼 (Password)</label>
-            <input type="password" v-model="formData.pwd" required>
+            <input type="password" v-model="formData.password" required>
           </div>
           <div class="form-group">
-            <label>經驗 (Experience)</label>
-            <select v-model="formData.experience">
-              <option value="初階">初階</option>
-              <option value="進階">進階</option>
-              <option value="教練">教練</option>
+            <label>潛水經驗 </label>
+            <select v-model="formData.expYear">
+              <option value="初階" style="color:gray">初階</option>
+              <option value="進階" style="color:green">進階</option>
+              <option value="教練" style="color:goldenrod">教練</option>
             </select>
           </div>
           <div class="form-group">
-            <label>年齡 (Age)</label>
+            <label>潛齡</label>
             <input type="number" v-model="formData.age">
           </div>
           
@@ -102,13 +102,13 @@ const deleteDiver = async (id) => {
 
       <!-- 列表 -->
       <div class="list-section">
-        <h2>📋 現有潛水員名單</h2>
+        <h2>📋 潛水夥伴名單</h2>
         <div class="diver-list">
           <div v-for="d in divers" :key="d.diverId" class="diver-card glass-panel">
             <div class="diver-info">
               <h3>{{ d.account }}</h3>
-              <span class="exp-badge">{{ d.experience }}</span>
-              <p class="age-text">年齡: {{ d.age || '未提供' }}</p>
+              <span class="exp-badge">{{ d.expYear }}</span>
+              <p class="age-text">潛齡: {{ d.age || 未透漏 }}</p>
             </div>
             <button @click="deleteDiver(d.diverId)" class="btn-danger">刪除</button>
           </div>
